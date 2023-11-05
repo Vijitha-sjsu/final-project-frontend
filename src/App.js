@@ -1,16 +1,25 @@
 import './App.css';
 import TweetComponent from './Components/TweetComponent/TweetComponent.tsx';
+import ProfileCard from './Components/ProfileCardComponent/ProfileCardComponent.tsx';
+import SearchComponent from './Components/SearchComponent/SearchComponent.tsx';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
 function App() {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={15}>
-        <Grid xs={3}>
-          <div style={{ backgroundColor: 'blue' }}>1</div>
+      <Grid container spacing={8} sx={{ mt: 2 }}> 
+        <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}> 
+          <ProfileCard profileData={{
+              name: "Petar Kajba",
+              location: "Croatia",
+              tagLine: "UI, UX Designer and Web Developer from Croatia",
+              tweetCount: 19,
+              followerCount: 499,
+              followingCount: 46,
+          }} />
         </Grid>
-        <Grid xs={6} style={{ backgroundColor: 'red' }}>
+        <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>
             <Grid >
               <TweetComponent id={1} user={{username:"Vijitha Gunta", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
@@ -36,7 +45,7 @@ function App() {
           </Grid>
         </Grid>
         <Grid xs={3}>
-          <div style={{ backgroundColor: 'yellow' }}>3</div>
+          <SearchComponent />
         </Grid>
       </Grid>
     </Box>
@@ -44,3 +53,4 @@ function App() {
 }
 
 export default App;
+

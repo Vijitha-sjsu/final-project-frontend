@@ -105,7 +105,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ id, user, time, te
     const userId = "fakeUserID" 
 
     return (
-        <Card>
+        <Card sx={{ borderRadius: '16px' }}>
             <CardHeader
                 avatar={ CustomAvatar(user.username)}
                 action={

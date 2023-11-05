@@ -1,7 +1,7 @@
 import './App.css';
 import TweetComponent from './Components/TweetComponent/TweetComponent.tsx';
 import ProfileCard from './Components/ProfileCardComponent/ProfileCardComponent.tsx';
-import SearchComponent from './Components/SearchComponent/SearchComponent.tsx';
+import SidebarComponent from './Components/SidebarComponent/SidebarComponent.tsx';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 
@@ -44,8 +44,10 @@ function App() {
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={3}>
-          <SearchComponent />
+        <Grid xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+          <Grid container direction={'column'} spacing={3}>
+            <SidebarComponent/>
+          </Grid>
         </Grid>
       </Grid>
     </Box>

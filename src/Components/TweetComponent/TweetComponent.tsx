@@ -1,7 +1,7 @@
 import React, { memo, ReactElement } from "react";
 import format from "date-fns/format";
 import { Card, CardContent, CardHeader, Typography } from "@mui/material";
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CustomAvatar from "../AvatarComponent/AvatarComponent.tsx";
 

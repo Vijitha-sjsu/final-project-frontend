@@ -4,6 +4,7 @@ import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent
 import CustomAvatar from '../../Components/AvatarComponent/AvatarComponent.tsx';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import format from "date-fns/format";
+import TweetComponent from '../../Components/TweetComponent/TweetComponent.tsx';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -85,19 +86,50 @@ export default function ProfilePage({ profileData }) {
         <Grid item xs={9}>
           <ProfileHeader profileData={profileData} />
           <Box sx={{ mt: 3 }}>
-            <Tabs value={tabValue} onChange={handleTabChange} centered>
-              <Tab label="Posts" />
-              <Tab label="Followers" />
-              <Tab label="Following" />
-            </Tabs>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider', mt: 3 }}>
+                <Tabs
+                value={tabValue}
+                onChange={handleTabChange}
+                variant="fullWidth"
+                centered
+                indicatorColor="primary" 
+                textColor="primary"
+                >
+                <Tab label="Posts" />
+                <Tab label="Followers" />
+                <Tab label="Following" />
+                </Tabs>
+            </Box>
             <TabPanel value={tabValue} index={0}>
-              {/* Content for Posts Tab */}
+            <Grid container direction={'column'} spacing={3}>
+            <Grid >
+              <TweetComponent id={1} user={{username:"Vijitha Gunta", id: 1}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+            <Grid >
+              <TweetComponent id={1} user={{username:"Joe Dane", id: 2}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+            <Grid >
+              <TweetComponent id={1} user={{username:"John doe", id: 3}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+            <Grid >
+              <TweetComponent id={1} user={{username:"Prateek Sharma", id: 4}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+            <Grid >
+              <TweetComponent id={1} user={{username:"Suri P", id: 5}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+            <Grid >
+              <TweetComponent id={1} user={{username:"Neelesh G", id: 6}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+            <Grid >
+              <TweetComponent id={1} user={{username:"EMily Howard", id: 7}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            </Grid>
+          </Grid>
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-              {/* Content for Followers Tab */}
+                <>hi 2</>
             </TabPanel>
             <TabPanel value={tabValue} index={2}>
-              {/* Content for Following Tab */}
+                <>hi 3</>
             </TabPanel>
           </Box>
         </Grid>

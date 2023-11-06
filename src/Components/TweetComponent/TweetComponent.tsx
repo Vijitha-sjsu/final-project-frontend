@@ -21,7 +21,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ id, user, time, te
     return (
         <Card sx={{ borderRadius: '16px' }}>
             <CardHeader
-                avatar={ <CustomAvatar name={user.username} />}
+                avatar={ <CustomAvatar name={user.username} size={48}/>}
                 action={
                 <IconButton aria-label="settings">
                     <MoreVertIcon />

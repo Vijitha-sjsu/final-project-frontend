@@ -3,9 +3,10 @@ import React from "react";
 
 interface CustomAvatarProps {
   name: string;
+  size: number;
 }
 
-const CustomAvatar: React.FC<CustomAvatarProps> = ({ name }) => {
+const CustomAvatar: React.FC<CustomAvatarProps> = ({ name, size }) => {
     const initials = getInitials(name)
     const backgroundImage = "url(" + getAvatarBackgroundImage(initials) + ")"
   
@@ -14,8 +15,8 @@ const CustomAvatar: React.FC<CustomAvatarProps> = ({ name }) => {
         aria-label={initials}
         component={Avatar}
         sx={{
-          width: 48,
-          height: 48,
+          width: size,
+          height: size,
           backgroundImage,
           backgroundSize: 'cover',
           backgroundPosition: 'center',

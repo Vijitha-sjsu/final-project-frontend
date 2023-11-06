@@ -9,7 +9,8 @@ const profileData = {
   tagLine: "UI/UX Designer and Web Developer from Croatia",
   tweetCount: 19,
   followerCount: 499,
-  followingCount: 46
+  followingCount: 46, 
+  joinDate: "Nov 1, 2023"
 };
 
 

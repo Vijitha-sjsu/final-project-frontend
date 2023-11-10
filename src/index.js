@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
+import { Auth0Provider } from '@auth0/auth0-react';
 
 const theme = createTheme({
   typography: {
@@ -29,7 +30,17 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <BrowserRouter>
+      <Auth0Provider
+    domain="dev-75uroj1rczuev8rq.us.auth0.com"
+    clientId="gghNQgPc8qmARgHvkrvoDKsWv1PqFwaK"
+    authorizationParams={{
+      redirect_uri: window.location.origin
+    }}
+  >
+
+ 
         <App />
+        </Auth0Provider>
       </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>

@@ -2,6 +2,8 @@ import './App.css';
 import HomePage from './Pages/Home/HomePage.tsx'
 import ProfilePage from './Pages/Profile/ProfilePage.tsx'
 import { Routes, Route } from 'react-router-dom';
+import { useAuth0 } from '@auth0/auth0-react';
+
 
 const profileData = {
   name: "Petar Kajba",
@@ -15,11 +17,22 @@ const profileData = {
 
 
 function App() {
+  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+  
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/profile" element={<ProfilePage profileData={profileData} />} />
-    </Routes>
+    <>
+    {!isAuthenticated && <button onClick={() => loginWithRedirect()}>Log In</button>}
+    {isAuthenticated && <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+      Log Out
+    </button>}
+    {isAuthenticated && <HomePage/>}
+    </>
+    
+    //TODO Routes
+    // <Routes>
+    //   <Route path="/" element={<HomePage />} />
+    //   <Route path="/profile" element={<ProfilePage profileData={profileData} />} />
+    // </Routes>
   );
 }
 

@@ -4,29 +4,15 @@ import ModalComponent from '../../Components/ModalComponent/ModalComponent.tsx';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useUserData } from '../../Contexts/UserDataContext.tsx';
 
 const SignupPage = React.memo(() => {
 
+    const { setUserData } = useUserData();
     const navigate = useNavigate();
 
     const { user } = useAuth0();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [userData, setUserData] = useState({
-        id: null,
-        userId: null,
-        username: null,
-        tagline: null,
-        location: null,
-        email: null,
-        profileImageUrl: null,
-        coverImageUrl: null,
-        firstName: null,
-        lastName: null,
-        createdAt: null,
-        updatedAt: null,
-        followers: [],
-        following: []
-      });
       
     const [errorMessage, setErrorMessage] = useState('');
   

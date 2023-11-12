@@ -5,11 +5,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { useUserData } from '../../Contexts/UserDataContext.tsx';
 
 const HomePage: React.FC = ()=> {
-  const { user, logout } = useAuth0();
-
-  const t = "Hyd555"
+  const { logout } = useAuth0();
+  const { userData } = useUserData();
 
   return (
     <div>
@@ -19,13 +19,14 @@ const HomePage: React.FC = ()=> {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={8} sx={{ mt: 2 }}> 
         <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}> 
-          <ProfileCard profileData={{
-              name: "Petar Kajba",
-              location: "Croatia",
-              tagLine: t,
-              followerCount: 499,
-              followingCount: 46,
-          }} />
+        <ProfileCard profileData={{
+          name: `${userData.firstName} ${userData.lastName }`.trim(),
+          username: userData.username,
+          location: userData.location ,
+          tagLine: userData.tagline ,
+          followerCount: userData.followers.length,
+          followingCount: userData.following.length,
+        }} />
         </Grid>
         <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>

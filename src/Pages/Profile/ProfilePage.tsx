@@ -5,6 +5,7 @@ import CustomAvatar from '../../Components/AvatarComponent/AvatarComponent.tsx';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import format from "date-fns/format";
 import TweetComponent from '../../Components/TweetComponent/TweetComponent.tsx';
+import { useUserData } from '../../Contexts/UserDataContext.tsx';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -23,7 +24,9 @@ function TabPanel(props) {
   );
 }
 
-function ProfileHeader({ profileData }) {
+function ProfileHeader() {
+  const { userData } = useUserData();
+
   return (
     <Box>
         <Box
@@ -38,29 +41,29 @@ function ProfileHeader({ profileData }) {
         >
         </Box>
         <Box sx={{marginLeft: 3}}>
-            <CustomAvatar name={profileData.name} size={200}/>
+            <CustomAvatar name={`${userData.firstName} ${userData.lastName}`.trim()} size={200}/>
         </Box>
         <Typography variant="h4" sx={{ pt: 3 }}>
-            {profileData.name}
+            {`${userData.firstName } ${userData.lastName }`.trim()}
         </Typography>
         <Typography variant="subtitle1">
-            {profileData.tagLine}
+            {userData.tagline}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 0.5, color: 'gray' }}>
             <CalendarMonthOutlinedIcon fontSize='small' sx={{marginRight:1}}></CalendarMonthOutlinedIcon>
             <Typography variant="subtitle1">
-                Joined {format(new Date(profileData.joinDate), "MMMM y")}
+                Joined {format(new Date( "Nov 8" ), "MMMM y")}
             </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Typography variant="subtitle1" sx={{ color: 'black', mr: 0.5 }}>
-            {profileData.followingCount}
+            {userData.following.length}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: 'gray', mr: 4 }}>
             Following
             </Typography>
             <Typography variant="subtitle1" sx={{ color: 'black', mr: 0.5 }}>
-            {profileData.followerCount}
+            {userData.followers.length}
             </Typography>
             <Typography variant="subtitle1" sx={{ color: 'gray' }}>
             Followers
@@ -84,7 +87,7 @@ export default function ProfilePage({ profileData }) {
           <SidebarComponent />
         </Grid>
         <Grid item xs={9}>
-          <ProfileHeader profileData={profileData} />
+          <ProfileHeader />
           <Box sx={{ mt: 3 }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', mt: 3 }}>
                 <Tabs

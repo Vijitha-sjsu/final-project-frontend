@@ -7,6 +7,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 
 const StyledList = styled(List)(({ theme }) => ({
@@ -28,6 +29,8 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 }));
 
 const SidebarComponent = () => {
+  const navigate = useNavigate();
+
     return (
       <StyledList>
         {/* Home */}
@@ -43,7 +46,7 @@ const SidebarComponent = () => {
           <ListItemIcon>
             <AccountBoxIcon />
           </ListItemIcon>
-          <ListItemText primary="Profile" />
+          <ListItemText primary="Profile" onClick={()=> navigate('/profile')}/>
         </StyledListItem>
   
         {/* Search */}

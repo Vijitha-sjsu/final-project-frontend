@@ -9,6 +9,12 @@ interface CustomAvatarProps {
 const CustomAvatar: React.FC<CustomAvatarProps> = ({ name, size }) => {
     const initials = getInitials(name)
     const backgroundImage = "url(" + getAvatarBackgroundImage(initials) + ")"
+    let fontSize = '1.6rem';
+    if (size == 200){
+      fontSize = '5rem';
+    } else if (size==100) {
+      fontSize = '2.5rem';
+    }
   
     return (
       <Box
@@ -24,8 +30,7 @@ const CustomAvatar: React.FC<CustomAvatarProps> = ({ name, size }) => {
           alignItems: 'center',
           justifyContent: 'center',
           color: '#ffffff', 
-          fontWeight: 'bold',
-          fontSize: '1.6rem',
+          fontSize: fontSize,
           fontFamily: 'Nunito, sans-serif', 
           textShadow: '2px 2px 0px #000000'}}
       >

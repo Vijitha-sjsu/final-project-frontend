@@ -8,6 +8,7 @@ import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 
 export interface ProfileData {
     name: string;
+    username: string;
     location: string;
     tagLine: string;
     followerCount: number;
@@ -20,14 +21,14 @@ interface ProfileCardProps {
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
   return (
-    <Card sx={{ maxWidth: 345, backgroundColor: 'background.default',  borderRadius: '16px' }}>
+    <Card sx={{ width: 345, backgroundColor: 'background.default',  borderRadius: '16px' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingY: 2 }}>
-        <CustomAvatar name={profileData.name} />
+        <CustomAvatar name={profileData.name} size={100} />
         <Typography gutterBottom variant="h5" component="div">
           {profileData.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          @{profileData.name.toLowerCase().split(' ').join('')}
+          @{profileData.username}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 0.5 }}>
           <FmdGoodOutlinedIcon color="action"  />
@@ -37,7 +38,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
         </Box>
       </Box>
       <CardContent>
-        <Typography variant="body2" color="text.secondary" textAlign="center">
+        <Typography variant="body2" color="text.primary" textAlign="center">
           {profileData.tagLine}
         </Typography>
         <Grid container spacing={2} sx={{ marginTop: 2, justifyContent: 'center' }}>

@@ -1,9 +1,10 @@
 import './App.css';
-import HomePage from './Pages/Home/HomePage.tsx'
+import SignupPage from './Pages/Signup/SignupPage.tsx';
 import ProfilePage from './Pages/Profile/ProfilePage.tsx'
+import HomePage from './Pages/Home/HomePage.tsx'
+import LandingPage from './Pages/Landing/LandingPage.tsx'
 import { Routes, Route } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
-
 
 const profileData = {
   name: "Petar Kajba",
@@ -15,26 +16,17 @@ const profileData = {
   joinDate: "Nov 1, 2023"
 };
 
-
 function App() {
-  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+  const { isAuthenticated } = useAuth0();
   
   return (
-    <>
-    {!isAuthenticated && <button onClick={() => loginWithRedirect()}>Log In</button>}
-    {isAuthenticated && <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-      Log Out
-    </button>}
-    {isAuthenticated && <HomePage/>}
-    </>
-    
-    //TODO Routes
-    // <Routes>
-    //   <Route path="/" element={<HomePage />} />
-    //   <Route path="/profile" element={<ProfilePage profileData={profileData} />} />
-    // </Routes>
+    <Routes>
+      {!isAuthenticated && <Route path="/" element={<LandingPage />} />}
+      {isAuthenticated && <Route path="/" element={<SignupPage />} />}
+      <Route path="/home" element={<HomePage/>} />
+      <Route path="/profile" element={<ProfilePage profileData={profileData} />} />
+    </Routes>
   );
 }
 
 export default App;
-

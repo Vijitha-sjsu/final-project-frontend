@@ -3,18 +3,26 @@ import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardCompon
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent.tsx'
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 
-export default function HomePage() {
+const HomePage: React.FC = ()=> {
+  const { user, logout } = useAuth0();
+
+  const t = "Hyd555"
+
   return (
+    <div>
+      <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+       Log Out
+     </button>
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={8} sx={{ mt: 2 }}> 
         <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}> 
           <ProfileCard profileData={{
               name: "Petar Kajba",
               location: "Croatia",
-              tagLine: "UI, UX Designer and Web Developer from Croatia",
-              tweetCount: 19,
+              tagLine: t,
               followerCount: 499,
               followingCount: 46,
           }} />
@@ -51,6 +59,8 @@ export default function HomePage() {
         </Grid>
       </Grid>
     </Box>
+    </div>
   );
 }
 
+export default HomePage;

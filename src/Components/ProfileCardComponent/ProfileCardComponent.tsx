@@ -10,7 +10,6 @@ export interface ProfileData {
     name: string;
     location: string;
     tagLine: string;
-    tweetCount: number;
     followerCount: number;
     followingCount: number;
 }
@@ -42,15 +41,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
           {profileData.tagLine}
         </Typography>
         <Grid container spacing={2} sx={{ marginTop: 2, justifyContent: 'center' }}>
-          <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Typography variant="body2" color="text.secondary">
-              Tweets
-            </Typography>
-            <Typography variant="subtitle1" color="text.primary">
-              {profileData.tweetCount}
-            </Typography>
-          </Grid>
-          <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography variant="body2" color="text.secondary">
               Followers
             </Typography>
@@ -58,7 +49,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
               {profileData.followerCount}
             </Typography>
           </Grid>
-          <Grid item xs={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
             <Typography variant="body2" color="text.secondary">
               Following
             </Typography>

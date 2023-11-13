@@ -10,10 +10,8 @@ const SignupPage = React.memo(() => {
 
     const { setUserData } = useUserData();
     const navigate = useNavigate();
-
     const { user } = useAuth0();
     const [isModalOpen, setIsModalOpen] = useState(false);
-      
     const [errorMessage, setErrorMessage] = useState('');
   
     const handleModalClose = () => {
@@ -61,7 +59,15 @@ const SignupPage = React.memo(() => {
         <ModalComponent open={isModalOpen} 
             onClose={handleModalClose} 
             onSave={handleSave}
-            errorMessage={errorMessage}/>
+            errorMessage={errorMessage}
+            initialState={{
+              firstName: '',
+              lastName: '',
+              username: '',
+              location: '',
+              tagline: '',
+            }}
+            allowClose={false}/>
         </Box>
 });
 

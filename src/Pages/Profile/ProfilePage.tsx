@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { Box, Tab, Tabs, Grid, Typography } from '@mui/material';
+import { Box, Tab, Tabs, Grid, Typography, IconButton } from '@mui/material';
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent.tsx'
 import CustomAvatar from '../../Components/AvatarComponent/AvatarComponent.tsx';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import format from "date-fns/format";
 import TweetComponent from '../../Components/TweetComponent/TweetComponent.tsx';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
+import EditIcon from '@mui/icons-material/Edit';
+import ModalComponent from '../../Components/ModalComponent/ModalComponent.tsx';
+import axios from 'axios';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -25,10 +28,41 @@ function TabPanel(props) {
 }
 
 function ProfileHeader() {
-  const { userData } = useUserData();
+  const { userData, setUserData } = useUserData();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleModalClose = () => {
+    setErrorMessage('');
+    setIsModalOpen(false);
+  };
+
+  const handleSave = (formData) => {
+    const url = `http://localhost:8050/api/users/${userData.userId}`;
+    axios.put(url, formData)
+      .then(response => {
+        console.log('viji before: ' + JSON.stringify(userData))
+        console.log('viji formdata: ' + JSON.stringify(formData))
+        setUserData(response.data);
+        handleModalClose();
+        console.log('viji after: ' + JSON.stringify(userData))
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 409) {
+          setErrorMessage('A user with this username already exists. Please try a different username.');
+        } else {
+          console.error('Error saving user data:', error);
+        }
+      });
+  };
+
+  const handleEditClick = () => {
+    setIsModalOpen(true);
+  };
 
   return (
     <Box>
+      <ModalComponent open = {isModalOpen} onClose={handleModalClose} onSave={handleSave} errorMessage={errorMessage} initialState={{firstName: userData.firstName, lastName:userData.lastName, tagline:userData.tagline, username:userData.username, location:userData.location}} allowClose={true}></ModalComponent>
         <Box
         sx={{
             position: 'relative',
@@ -40,9 +74,24 @@ function ProfileHeader() {
         }}
         >
         </Box>
-        <Box sx={{marginLeft: 3}}>
-            <CustomAvatar name={`${userData.firstName} ${userData.lastName}`.trim()} size={200}/>
-        </Box>
+        <Grid container>
+          <Grid item xs={4}>
+            <Box sx={{marginLeft: 3}}>
+                <CustomAvatar name={`${userData.firstName} ${userData.lastName}`.trim()} size={200}/>
+            </Box>
+          </Grid>
+          <Grid item xs={8}>
+            <Box display="flex" justifyContent="flex-end" alignItems="center" style={{ height: '100%' , transform: 'translateY(13%)'}}>
+              <IconButton 
+                  onClick={handleEditClick}
+                  aria-label="edit profile"
+                >
+                    <EditIcon />
+                </IconButton>
+            </Box>
+          </Grid>
+        </Grid>
+       
         <Typography variant="h4" sx={{ pt: 3 }}>
             {`${userData.firstName } ${userData.lastName }`.trim()}
         </Typography>
@@ -52,7 +101,7 @@ function ProfileHeader() {
         <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 0.5, color: 'gray' }}>
             <CalendarMonthOutlinedIcon fontSize='small' sx={{marginRight:1}}></CalendarMonthOutlinedIcon>
             <Typography variant="subtitle1">
-                Joined {format(new Date( "Nov 8" ), "MMMM y")}
+                Joined {format(new Date( userData.createdAt ), "MMMM y")}
             </Typography>
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>

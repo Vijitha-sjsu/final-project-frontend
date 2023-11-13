@@ -19,16 +19,12 @@ interface ModalProps {
   onClose: () => void;
   onSave: (data: { firstName: string, lastName: string, username: string, location: string, tagline: string }) => void;
   errorMessage: string;
+  allowClose: boolean;
+  initialState: { firstName: string, lastName: string, username: string, location: string, tagline: string };
 }
 
-const ModalComponent: React.FC<ModalProps> = ({ open, onClose, onSave, errorMessage }) => {
-  const [formValues, setFormValues] = useState({
-    firstName: '',
-    lastName: '',
-    username: '',
-    location: '',
-    tagline: '',
-  });
+const ModalComponent: React.FC<ModalProps> = ({ open, onClose, onSave, errorMessage, allowClose, initialState}) => {
+  const [formValues, setFormValues] = useState(initialState);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -40,8 +36,8 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose, onSave, errorMess
   };
 
   return (
-    <Modal open={open} onClose={onClose} disableEscapeKeyDown={true} BackdropProps={{
-      onClick: (event) => event.stopPropagation() 
+    <Modal open={open} onClose={onClose} disableEscapeKeyDown={!allowClose} BackdropProps={{
+      onClick: allowClose ? ()=> {onClose(); setFormValues(initialState);}  : (event) => event.stopPropagation()
     }}>
       <Box sx={{
         position: 'absolute', 
@@ -60,7 +56,7 @@ const ModalComponent: React.FC<ModalProps> = ({ open, onClose, onSave, errorMess
 )}
         <Typography variant="h6" style={{ color: colors.forest, marginBottom: 8 }}>Set Sail on Travel Tales!</Typography>
         <Typography variant="caption" style={{ color: colors.forest, marginBottom: 16 }}>Create Your Explorer Profile</Typography>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{mt:0.5}}>
           <Grid item xs={6}>
             <TextField required fullWidth label="First Name" name="firstName" value={formValues.firstName} onChange={handleInputChange} />
           </Grid>

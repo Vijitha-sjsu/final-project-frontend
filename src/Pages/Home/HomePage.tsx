@@ -17,16 +17,11 @@ const HomePage: React.FC = ()=> {
        Log Out
      </button>
     <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={8} sx={{ mt: 2 }}> 
-        <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}> 
-        <ProfileCard profileData={{
-          name: `${userData.firstName} ${userData.lastName }`.trim(),
-          username: userData.username,
-          location: userData.location ,
-          tagLine: userData.tagline ,
-          followerCount: userData.followers.length,
-          followingCount: userData.following.length,
-        }} />
+      <Grid container spacing={3} sx={{ mt: 2, mr:2 }}> 
+      <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
+          
+            <SidebarComponent/>
+         
         </Grid>
         <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>
@@ -53,10 +48,8 @@ const HomePage: React.FC = ()=> {
             </Grid>
           </Grid>
         </Grid>
-        <Grid xs={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-          <Grid container direction={'column'} spacing={3}>
-            <SidebarComponent/>
-          </Grid>
+        <Grid xs={3} > 
+          <ProfileCard profileData={userData} />
         </Grid>
       </Grid>
     </Box>

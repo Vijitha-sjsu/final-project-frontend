@@ -6,24 +6,11 @@ import { Grid, Box } from '@mui/material';
 import CustomAvatar from '../AvatarComponent/AvatarComponent.tsx'; 
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 
-export interface ProfileData {
-    name: string;
-    username: string;
-    location: string;
-    tagLine: string;
-    followerCount: number;
-    followingCount: number;
-}
-
-interface ProfileCardProps {
-    profileData: ProfileData;
-}
-
-const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
+const ProfileCard: React.FC<any> = ({ profileData }) => {
   return (
-    <Card sx={{ width: 345, backgroundColor: 'background.default',  borderRadius: '16px' }}>
+    <Card sx={{ backgroundColor: 'background.default',  borderRadius: '16px' }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingY: 2 }}>
-        <CustomAvatar name={profileData.name} size={100} />
+        <CustomAvatar name={profileData.firstName + " " + profileData.lastName} size={100} />
         <Typography gutterBottom variant="h5" component="div">
           {profileData.name}
         </Typography>
@@ -39,7 +26,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
       </Box>
       <CardContent>
         <Typography variant="body2" color="text.primary" textAlign="center">
-          {profileData.tagLine}
+          {profileData.tagline}
         </Typography>
         <Grid container spacing={2} sx={{ marginTop: 2, justifyContent: 'center' }}>
           <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -47,7 +34,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
               Followers
             </Typography>
             <Typography variant="subtitle1" color="text.primary">
-              {profileData.followerCount}
+              {profileData.followers.length}
             </Typography>
           </Grid>
           <Grid item xs={6} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -55,7 +42,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profileData }) => {
               Following
             </Typography>
             <Typography variant="subtitle1" color="text.primary">
-              {profileData.followingCount}
+              {profileData.following.length}
             </Typography>
           </Grid>
         </Grid>

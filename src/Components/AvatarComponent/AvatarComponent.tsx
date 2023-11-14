@@ -40,7 +40,7 @@ const CustomAvatar: React.FC<CustomAvatarProps> = ({ name, size }) => {
   }
 
 const getInitials = (name: string) => {
-    return name.split(" ").map((n: string)=>n[0].toUpperCase()).join("")
+    return name.split(" ").map((n: string)=>n[0]?.toUpperCase()).join("")
 }
 
 function hashStringToNumber(str) {

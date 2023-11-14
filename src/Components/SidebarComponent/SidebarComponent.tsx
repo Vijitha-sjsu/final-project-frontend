@@ -34,7 +34,7 @@ const SidebarComponent = () => {
     return (
       <StyledList>
         {/* Home */}
-        <StyledListItem onClick={()=> navigate('/')}>
+        <StyledListItem onClick={()=> navigate('/home')}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>

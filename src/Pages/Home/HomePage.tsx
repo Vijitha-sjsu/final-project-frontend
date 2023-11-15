@@ -24,8 +24,8 @@ const HomePage: React.FC = ()=> {
         </Grid>
         <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>
-            <NewPostComponent></NewPostComponent>
-            <Grid >
+            <NewPostComponent ></NewPostComponent>
+            {/* <Grid >
               <TweetComponent id={1} user={{username:"Vijitha Gunta", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
             </Grid>
             <Grid >
@@ -45,7 +45,7 @@ const HomePage: React.FC = ()=> {
             </Grid>
             <Grid >
               <TweetComponent id={1} user={{username:"EMily Howard", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
+            </Grid> */}
           </Grid>
         </Grid>
         <Grid xs={3} > 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Tab, Tabs, Grid, Typography, IconButton } from '@mui/material';
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent.tsx'
 import CustomAvatar from '../../Components/AvatarComponent/AvatarComponent.tsx';
@@ -9,6 +9,8 @@ import { useUserData } from '../../Contexts/UserDataContext.tsx';
 import EditIcon from '@mui/icons-material/Edit';
 import ModalComponent from '../../Components/ModalComponent/ModalComponent.tsx';
 import axios from 'axios';
+import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent.tsx'; 
+import Modal from '@mui/material/Modal';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -124,13 +126,78 @@ function ProfileHeader() {
 
 export default function ProfilePage({ profileData }) {
   const [tabValue, setTabValue] = useState(0);
+  const [userPosts, setUserPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
+
+  const { userData } = useUserData();
+  const fetchUserPosts = async () => {
+    setIsLoading(true);
+    setError('');
+    try {
+      const response = await axios.get(`http://localhost:8090/api/post/getUserPosts/${userData.userId}`);
+      const sortedPosts = response.data.sort((a, b) => {
+        const dateA = new Date(a.lastModifiedDate).getTime();
+        const dateB = new Date(b.lastModifiedDate).getTime();
+        return dateB - dateA; 
+      });
+      setUserPosts(sortedPosts);
+    } catch (error) {
+      setError('Failed to load posts.'); 
+      console.error('There was an error fetching the posts:', error);
+    }
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (userData.userId) {
+      fetchUserPosts();
+    }
+  }, []);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
+  const handleEditPostClick = (post) => {
+    setEditingPost(post); 
+    setIsEditModalOpen(true); 
+  };
+
+  const handleDeletePostClick = async (postId) => {
+    try {
+        await axios.delete(`http://localhost:8090/api/post/deletePost/${userData.userId}/${postId}`);
+        fetchUserPosts();
+    } catch (error) {
+        console.error("Failed to delete the post:", error);
+    }
+};
+
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <Modal
+        open={isEditModalOpen}
+        onClose={() => {setIsEditModalOpen(false);}}
+        aria-labelledby="edit-post-modal"
+        aria-describedby="modal-modal-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Box sx={{ 
+          backgroundColor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          borderRadius: 2
+        }}>
+          <NewPostComponent initialContent={editingPost?.content || ''} onClose={() => {setIsEditModalOpen(false); fetchUserPosts();}}
+        postId={editingPost?.postId}/>
+        </Box>
+      </Modal>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <SidebarComponent />
@@ -154,28 +221,18 @@ export default function ProfilePage({ profileData }) {
             </Box>
             <TabPanel value={tabValue} index={0}>
             <Grid container direction={'column'} spacing={3}>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Vijitha Gunta", id: 1}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+                  {isLoading ? (
+                  <Typography>Loading...</Typography>
+                ) : error ? (
+                  <Typography color="error">{error}</Typography>
+                ) : (
+                  userPosts.map((post) => (
+                    <Grid item key={post.id}>
+                       <TweetComponent {...post} onEditPost={() => handleEditPostClick(post)} onDeletePost={handleDeletePostClick}/>
+                    </Grid>
+                  ))
+                )}
             </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Joe Dane", id: 2}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"John doe", id: 3}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Prateek Sharma", id: 4}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Suri P", id: 5}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Neelesh G", id: 6}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"EMily Howard", id: 7}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-          </Grid>
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
                 <>hi 2</>

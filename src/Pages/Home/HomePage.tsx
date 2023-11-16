@@ -3,14 +3,47 @@ import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardCompon
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent.tsx'
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
 import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent.tsx';
+import axios from 'axios';
 
 const HomePage: React.FC = ()=> {
   const { logout } = useAuth0();
   const { userData } = useUserData();
+  const [tweets, setTweets] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef();
+  const lastTweetElementRef = useCallback(node => {
+    if (loading) return;
+    if (observer.current) observer.current.disconnect();
+    observer.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        loadMoreTweets();
+      }
+    });
+    if (node) observer.current.observe(node);
+  }, [loading, hasMore]);
+
+  useEffect(() => {
+    loadMoreTweets();
+  }, []);
+
+  const loadMoreTweets = async () => {
+    setLoading(true);
+    try {
+      const olderThan = tweets.length > 0 ? tweets[tweets.length - 1].tweetTimestamp : null;
+      const response = await axios.get(`http://localhost:8086/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
+      setTweets(prevTweets => [...prevTweets, ...newTweets]);
+      setHasMore(response.data.length > 0);
+    } catch (error) {
+      console.error("Error fetching tweets:", error);
+    }
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -21,36 +54,21 @@ const HomePage: React.FC = ()=> {
       <Grid container spacing={3} sx={{ mt: 2, mr:2 }}> 
       <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
           <SidebarComponent/>
-        </Grid>
-        <Grid xs={6} >
+      </Grid>
+      <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>
-            <NewPostComponent ></NewPostComponent>
-            {/* <Grid >
-              <TweetComponent id={1} user={{username:"Vijitha Gunta", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
+            <NewPostComponent />
+              {tweets.map((tweet, index) => (
+                <Grid key={tweet.id} ref={index === tweets.length - 1 ? lastTweetElementRef : null}>
+                  <TweetComponent userId={tweet.author_id} authorId={tweet.author_id} postId={tweet.tweetId} createdDate={tweet.tweetTimestamp} lastModifiedDate={tweet.tweetTimestamp} content={tweet.content} />
+                </Grid>
+              ))}
             </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Joe Dane", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"John doe", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Prateek Sharma", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Suri P", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"Neelesh G", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid>
-            <Grid >
-              <TweetComponent id={1} user={{username:"EMily Howard", id: "userId"}} time={"Nov 5"} textContent='Yaay, my first tweet!' />
-            </Grid> */}
-          </Grid>
-        </Grid>
-        <Grid xs={3} > 
+            {loading && <p>Loading more tweets...</p>}
+      </Grid>
+      <Grid xs={3} > 
           <ProfileCard profileData={userData} />
-        </Grid>
+      </Grid>
       </Grid>
     </Box>
     </div>

@@ -13,8 +13,8 @@ export interface TweetComponentProps {
     createdDate: string;
     lastModifiedDate: string;
     content: string;
-    onEditPost: any;
-    onDeletePost: any;
+    onEditPost?: any;
+    onDeletePost?: any;
 }
 
 const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost }) => {

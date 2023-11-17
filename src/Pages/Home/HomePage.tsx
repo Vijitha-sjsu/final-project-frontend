@@ -36,8 +36,14 @@ const HomePage: React.FC = ()=> {
     setLoading(true);
     try {
       const olderThan = tweets.length > 0 ? tweets[tweets.length - 1].tweetTimestamp : null;
-      const response = await axios.get(`http://localhost:8086/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
-      setTweets(prevTweets => [...prevTweets, ...newTweets]);
+      let response;
+      if (olderThan){
+        response = await axios.get(`http://localhost:8086/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
+      }
+      else {
+        response = await axios.get(`http://localhost:8086/user_feed/${userData.userId}?limit=100}`);
+      }
+      setTweets(prevTweets => [...prevTweets, ...response.data]);
       setHasMore(response.data.length > 0);
     } catch (error) {
       console.error("Error fetching tweets:", error);

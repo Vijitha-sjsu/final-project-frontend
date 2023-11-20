@@ -38,10 +38,10 @@ const HomePage: React.FC = ()=> {
       const olderThan = tweets.length > 0 ? tweets[tweets.length - 1].tweetTimestamp : null;
       let response = null;
       if (olderThan === null ){
-        response = await axios.get(`http://138.2.232.246/user_feed/${userData.userId}?limit=100`);
+        response = await axios.get(`https://feed-service/user_feed/${userData.userId}?limit=100`);
       }
       else {
-        response = await axios.get(`http://138.2.232.246/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
+        response = await axios.get(`https://feed-service/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
       }
       setTweets(prevTweets => {
         const filteredNewTweets = response.data.filter(newTweet => 

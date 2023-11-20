@@ -42,7 +42,7 @@ function ProfileHeader() {
   };
 
   const handleSave = (formData) => {
-    const url = `http://follow-service/api/users/${userData.userId}`;
+    const url = `https://follow-service/api/users/${userData.userId}`;
     axios.put(url, formData)
       .then(response => {
         setUserData(response.data);
@@ -152,7 +152,7 @@ export default function ProfilePage({ profileData }) {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.get(`http://post-service/api/post/getUserPosts/${userData.userId}`);
+      const response = await axios.get(`https://post-service/api/post/getUserPosts/${userData.userId}`);
       const sortedPosts = response.data.sort((a, b) => {
         const dateA = new Date(a.lastModifiedDate).getTime();
         const dateB = new Date(b.lastModifiedDate).getTime();
@@ -170,7 +170,7 @@ export default function ProfilePage({ profileData }) {
   const fetchFollowers = async () => {
     if (!userData.userId) return; 
     try {
-      const response = await axios.get(`http://follow-service/api/users/${userData.userId}/followers`);
+      const response = await axios.get(`https://follow-service/api/users/${userData.userId}/followers`);
       setFollowers(response.data);
     } catch (error) {
       console.error('There was an error fetching the followers:', error);
@@ -181,7 +181,7 @@ export default function ProfilePage({ profileData }) {
   const fetchFollowing = async () => {
     if (!userData.userId) return;
     try {
-      const response = await axios.get(`http://follow-service/api/users/${userData.userId}/following`);
+      const response = await axios.get(`https://follow-service/api/users/${userData.userId}/following`);
       setFollowing(response.data);
     } catch (error) {
       console.error('There was an error fetching the following list:', error);
@@ -213,7 +213,7 @@ export default function ProfilePage({ profileData }) {
 
   const handleDeletePostClick = async (postId) => {
     try {
-        await axios.delete(`http://post-service/api/post/deletePost/${userData.userId}/${postId}`);
+        await axios.delete(`https://post-service/api/post/deletePost/${userData.userId}/${postId}`);
         fetchUserPosts();
     } catch (error) {
         console.error("Failed to delete the post:", error);

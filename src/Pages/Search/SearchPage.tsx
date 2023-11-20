@@ -20,7 +20,7 @@ const SearchPage = () => {
   const handleFollowUser = async (userIdToFollow) => {
     setIsLoading(true);
     try {
-      await axios.post(`http://localhost:8050/api/users/${userData.userId}/follow/${userIdToFollow}`);
+      await axios.post(`http://follow-service/api/users/${userData.userId}/follow/${userIdToFollow}`);
       const updatedUserData = {
         ...userData,
         following: [...userData.following, userIdToFollow]
@@ -49,8 +49,8 @@ const SearchPage = () => {
     setIsLoading(true);
     setErrorMessage('');
     try {
-        const searchRequest = axios.get(`http://localhost:8050/api/users/search?keyword=${searchQuery}`);
-        const userRequest = axios.get(`http://localhost:8050/api/users/getUser/${userData.userId}`);
+        const searchRequest = axios.get(`http://follow-service/api/users/search?keyword=${searchQuery}`);
+        const userRequest = axios.get(`http://follow-service/api/users/getUser/${userData.userId}`);
 
         const [userResponse, searchResponse] = await Promise.all([userRequest, searchRequest]);
 

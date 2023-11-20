@@ -19,7 +19,7 @@ const SignupPage = React.memo(() => {
     };
   
     const handleSave = (formData) => {
-      const url = 'http://localhost:8050/api/users/create';
+      const url = 'http://follow-service/api/users/create';
       formData = {...formData, 'email': user?.email, 'userId': user?.sub}
       axios.post(url, formData)
         .then(response => {
@@ -39,7 +39,7 @@ const SignupPage = React.memo(() => {
 
     useEffect(() => {
         const userId = user?.sub;
-        const url = `http://localhost:8050/api/users/getUser/${userId}`;
+        const url = `http://follow-service/api/users/getUser/${userId}`;
         axios.get(url)
           .then(response => {
             setUserData(response.data);

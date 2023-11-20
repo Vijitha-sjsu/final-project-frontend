@@ -36,11 +36,11 @@ const NewPostComponent = ({ initialContent = '', onClose, postId = null }) => {
     setErrorMessage('');
     
     try {
-      const response = postId? await axios.put(`http://localhost:8090/api/post/updatePost/${userData.userId}/${postId}`, {
+      const response = postId? await axios.put(`http://post-service/api/post/updatePost/${userData.userId}/${postId}`, {
         userId: userData.userId,
         authorId: userData.userId,
         content: postContent
-      }) : await axios.post('http://localhost:8090/api/post/createPost', {
+      }) : await axios.post('http://post-service/api/post/createPost', {
         userId: userData.userId,
         authorId: userData.userId,
         content: postContent

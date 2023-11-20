@@ -6,9 +6,10 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-
+import { useAuth0 } from '@auth0/auth0-react';
 
 const StyledList = styled(List)(({ theme }) => ({
   width: '80%',
@@ -30,6 +31,7 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 
 const SidebarComponent = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth0();
 
     return (
       <StyledList>
@@ -56,6 +58,14 @@ const SidebarComponent = () => {
           </ListItemIcon>
           <ListItemText primary="Search" />
         </StyledListItem>
+
+          {/* Logout */}
+          <StyledListItem onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
+            <ListItemIcon>
+              <LogoutIcon />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </StyledListItem>
       </StyledList>
     );
   };

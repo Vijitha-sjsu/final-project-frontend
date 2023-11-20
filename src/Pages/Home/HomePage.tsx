@@ -58,9 +58,6 @@ const HomePage: React.FC = ()=> {
 
   return (
     <div>
-      <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-       Log Out
-     </button>
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={3} sx={{ mt: 2, mr:2 }}> 
       <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>

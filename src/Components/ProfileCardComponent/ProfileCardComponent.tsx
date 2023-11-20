@@ -12,11 +12,12 @@ const ProfileCard: React.FC<any> = ({ profileData }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingY: 2 }}>
         <CustomAvatar name={profileData.firstName + " " + profileData.lastName} size={100} />
         <Typography gutterBottom variant="h5" component="div">
-          {profileData.name}
+          {profileData.firstName + " " + profileData.lastName}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          @{profileData.username}
+          @{profileData.username} 
         </Typography>
+        {profileData.email}
         <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 0.5 }}>
           <FmdGoodOutlinedIcon color="action"  />
           <Typography variant="body2" color="text.secondary">

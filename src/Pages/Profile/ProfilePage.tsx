@@ -11,6 +11,8 @@ import ModalComponent from '../../Components/ModalComponent/ModalComponent.tsx';
 import axios from 'axios';
 import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent.tsx'; 
 import Modal from '@mui/material/Modal';
+import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardComponent.tsx';
+import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,14 +42,11 @@ function ProfileHeader() {
   };
 
   const handleSave = (formData) => {
-    const url = `http://localhost:8050/api/users/${userData.userId}`;
+    const url = `http://follow-service/api/users/${userData.userId}`;
     axios.put(url, formData)
       .then(response => {
-        console.log('viji before: ' + JSON.stringify(userData))
-        console.log('viji formdata: ' + JSON.stringify(formData))
         setUserData(response.data);
         handleModalClose();
-        console.log('viji after: ' + JSON.stringify(userData))
       })
       .catch(error => {
         if (error.response && error.response.status === 409) {
@@ -97,6 +96,18 @@ function ProfileHeader() {
         <Typography variant="h4" sx={{ pt: 3 }}>
             {`${userData.firstName } ${userData.lastName }`.trim()}
         </Typography>
+        
+            <Box sx={{ display: 'flex', alignItems: 'center', marginTop: 0.5, color: 'gray' }}>
+            <Typography variant="subtitle1" sx={{marginRight: 2}}>
+            @{userData.username} 
+            </Typography>
+            |
+            <EmailOutlinedIcon fontSize='small' sx={{marginRight:0.3, marginLeft: 2}}></EmailOutlinedIcon>
+            <Typography variant="subtitle1">
+             {userData.email}
+            </Typography>
+        </Box> 
+        
         <Typography variant="subtitle1">
             {userData.tagline}
         </Typography>
@@ -131,13 +142,17 @@ export default function ProfilePage({ profileData }) {
   const [error, setError] = useState('');
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
 
   const { userData } = useUserData();
+
+  // Fetch user's posts
   const fetchUserPosts = async () => {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.get(`http://localhost:8090/api/post/getUserPosts/${userData.userId}`);
+      const response = await axios.get(`http://post-service/api/post/getUserPosts/${userData.userId}`);
       const sortedPosts = response.data.sort((a, b) => {
         const dateA = new Date(a.lastModifiedDate).getTime();
         const dateB = new Date(b.lastModifiedDate).getTime();
@@ -151,10 +166,40 @@ export default function ProfilePage({ profileData }) {
     setIsLoading(false);
   };
 
+  // Fetch user's followers
+  const fetchFollowers = async () => {
+    if (!userData.userId) return; 
+    try {
+      const response = await axios.get(`http://follow-service/api/users/${userData.userId}/followers`);
+      setFollowers(response.data);
+    } catch (error) {
+      console.error('There was an error fetching the followers:', error);
+    }
+  };
+
+  // Fetch user's following
+  const fetchFollowing = async () => {
+    if (!userData.userId) return;
+    try {
+      const response = await axios.get(`http://follow-service/api/users/${userData.userId}/following`);
+      setFollowing(response.data);
+    } catch (error) {
+      console.error('There was an error fetching the following list:', error);
+    }
+  };
+
   useEffect(() => {
     if (userData.userId) {
       fetchUserPosts();
     }
+  }, []);
+
+  useEffect(() => {
+    fetchFollowers();
+  }, []); 
+
+  useEffect(() => {
+    fetchFollowing();
   }, []);
 
   const handleTabChange = (event, newValue) => {
@@ -168,7 +213,7 @@ export default function ProfilePage({ profileData }) {
 
   const handleDeletePostClick = async (postId) => {
     try {
-        await axios.delete(`http://localhost:8090/api/post/deletePost/${userData.userId}/${postId}`);
+        await axios.delete(`http://post-service/api/post/deletePost/${userData.userId}/${postId}`);
         fetchUserPosts();
     } catch (error) {
         console.error("Failed to delete the post:", error);
@@ -235,10 +280,30 @@ export default function ProfilePage({ profileData }) {
             </Grid>
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-                <>hi 2</>
+              {followers.length > 0 ? (
+                <Grid container spacing={2}>
+                  {followers.map((follower) => (
+                    <Grid item key={follower.userId} xs={12} sm={6} md={4}>
+                      <ProfileCard profileData={follower} /> 
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography>No followers found.</Typography>
+              )}
             </TabPanel>
             <TabPanel value={tabValue} index={2}>
-                <>hi 3</>
+              {following.length > 0 ? (
+                <Grid container spacing={2}>
+                  {following.map((user) => (
+                    <Grid item key={user.userId} xs={12} sm={6} md={4}>
+                      <ProfileCard profileData={user} />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography>No following found.</Typography>
+              )}
             </TabPanel>
           </Box>
         </Grid>

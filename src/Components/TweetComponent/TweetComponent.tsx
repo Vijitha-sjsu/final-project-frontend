@@ -28,7 +28,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
         const fetchUser = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://follow-service:443/api/users/getUser/${userId}`);
+                const response = await axios.get(`https://follow-service.default.svc.cluster.local:443/api/users/getUser/${userId}`);
                 setUser(response.data);
             } catch (error) {
                 console.error("Failed to fetch user details:", error);

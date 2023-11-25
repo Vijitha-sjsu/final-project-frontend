@@ -5,6 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
+import { FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
 
 const SignupPage = React.memo(() => {
 
@@ -19,7 +20,7 @@ const SignupPage = React.memo(() => {
     };
   
     const handleSave = (formData) => {
-      const url = 'https://follow-service.default.svc.cluster.local:443/api/users/create';
+      const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/create`;
       formData = {...formData, 'email': user?.email, 'userId': user?.sub}
       axios.post(url, formData)
         .then(response => {
@@ -39,7 +40,7 @@ const SignupPage = React.memo(() => {
 
     useEffect(() => {
         const userId = user?.sub;
-        const url = `https://follow-service.default.svc.cluster.local:443/api/users/getUser/${userId}`;
+        const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userId}`;
         axios.get(url)
           .then(response => {
             setUserData(response.data);

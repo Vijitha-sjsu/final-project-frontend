@@ -13,6 +13,7 @@ import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent
 import Modal from '@mui/material/Modal';
 import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardComponent.tsx';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
+import { FOLLOW_SERVICE_BASE_URL, POST_SERVICE_BASE_URL } from '../../constants.ts';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -42,7 +43,7 @@ function ProfileHeader() {
   };
 
   const handleSave = (formData) => {
-    const url = `https://follow-service.default.svc.cluster.local:443/api/users/${userData.userId}`;
+    const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/${userData.userId}`;
     axios.put(url, formData)
       .then(response => {
         setUserData(response.data);
@@ -152,7 +153,7 @@ export default function ProfilePage({ profileData }) {
     setIsLoading(true);
     setError('');
     try {
-      const response = await axios.get(`https://post-service.default.svc.cluster.local:443/api/post/getUserPosts/${userData.userId}`);
+      const response = await axios.get(`${POST_SERVICE_BASE_URL}/api/post/getUserPosts/${userData.userId}`);
       const sortedPosts = response.data.sort((a, b) => {
         const dateA = new Date(a.lastModifiedDate).getTime();
         const dateB = new Date(b.lastModifiedDate).getTime();
@@ -170,7 +171,7 @@ export default function ProfilePage({ profileData }) {
   const fetchFollowers = async () => {
     if (!userData.userId) return; 
     try {
-      const response = await axios.get(`https://follow-service.default.svc.cluster.local:443/api/users/${userData.userId}/followers`);
+      const response = await axios.get(`${FOLLOW_SERVICE_BASE_URL}/api/users/${userData.userId}/followers`);
       setFollowers(response.data);
     } catch (error) {
       console.error('There was an error fetching the followers:', error);
@@ -181,7 +182,7 @@ export default function ProfilePage({ profileData }) {
   const fetchFollowing = async () => {
     if (!userData.userId) return;
     try {
-      const response = await axios.get(`https://follow-service.default.svc.cluster.local:443/api/users/${userData.userId}/following`);
+      const response = await axios.get(`${FOLLOW_SERVICE_BASE_URL}/api/users/${userData.userId}/following`);
       setFollowing(response.data);
     } catch (error) {
       console.error('There was an error fetching the following list:', error);
@@ -213,7 +214,7 @@ export default function ProfilePage({ profileData }) {
 
   const handleDeletePostClick = async (postId) => {
     try {
-        await axios.delete(`https://post-service.default.svc.cluster.local:443/api/post/deletePost/${userData.userId}/${postId}`);
+        await axios.delete(`${POST_SERVICE_BASE_URL}/api/post/deletePost/${userData.userId}/${postId}`);
         fetchUserPosts();
     } catch (error) {
         console.error("Failed to delete the post:", error);

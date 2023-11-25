@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Box, Button, TextareaAutosize, Typography, CircularProgress } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
+import { POST_SERVICE_BASE_URL } from '../../constants.ts';
 
 interface NewPostComponentProps {
   initialContent?: string;
@@ -36,11 +37,11 @@ const NewPostComponent = ({ initialContent = '', onClose, postId = null }) => {
     setErrorMessage('');
     
     try {
-      const response = postId? await axios.put(`https://post-service.default.svc.cluster.local:443/api/post/updatePost/${userData.userId}/${postId}`, {
+      const response = postId? await axios.put(`${POST_SERVICE_BASE_URL}/api/post/updatePost/${userData.userId}/${postId}`, {
         userId: userData.userId,
         authorId: userData.userId,
         content: postContent
-      }) : await axios.post('https://post-service.default.svc.cluster.local:443/api/post/createPost', {
+      }) : await axios.post(`${POST_SERVICE_BASE_URL}/api/post/createPost`, {
         userId: userData.userId,
         authorId: userData.userId,
         content: postContent

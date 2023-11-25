@@ -5,6 +5,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CustomAvatar from "../AvatarComponent/AvatarComponent.tsx";
 import { UserData, useUserData } from "../../Contexts/UserDataContext.tsx";
 import axios from "axios";
+import { FOLLOW_SERVICE_BASE_URL } from "../../constants.ts";
 
 export interface TweetComponentProps {
     userId: string;
@@ -28,7 +29,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
         const fetchUser = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://follow-service.default.svc.cluster.local:443/api/users/getUser/${userId}`);
+                const response = await axios.get(`${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userId}`);
                 setUser(response.data);
             } catch (error) {
                 console.error("Failed to fetch user details:", error);

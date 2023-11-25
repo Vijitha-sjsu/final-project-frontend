@@ -8,6 +8,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
 import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent.tsx';
 import axios from 'axios';
+import { FEED_SERVICE_BASE_URL } from '../../constants.ts';
 
 const HomePage: React.FC = ()=> {
   const { logout } = useAuth0();
@@ -38,10 +39,10 @@ const HomePage: React.FC = ()=> {
       const olderThan = tweets.length > 0 ? tweets[tweets.length - 1].tweetTimestamp : null;
       let response = null;
       if (olderThan === null ){
-        response = await axios.get(`https://feed-service.default.svc.cluster.local:443/user_feed/${userData.userId}?limit=100`);
+        response = await axios.get(`${FEED_SERVICE_BASE_URL}/user_feed/${userData.userId}?limit=100`);
       }
       else {
-        response = await axios.get(`https://feed-service.default.svc.cluster.local:443/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
+        response = await axios.get(`${FEED_SERVICE_BASE_URL}/user_feed/${userData.userId}?limit=100&older_than=${olderThan}`);
       }
       setTweets(prevTweets => {
         const filteredNewTweets = response.data.filter(newTweet => 

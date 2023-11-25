@@ -5,6 +5,7 @@ import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent
 import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardComponent.tsx';
 import CheckIcon from '@mui/icons-material/Check';
 import { UserData, useUserData } from '../../Contexts/UserDataContext.tsx';
+import { FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
 
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +21,7 @@ const SearchPage = () => {
   const handleFollowUser = async (userIdToFollow) => {
     setIsLoading(true);
     try {
-      await axios.post(`https://follow-service.default.svc.cluster.local:443/api/users/${userData.userId}/follow/${userIdToFollow}`);
+      await axios.post(`${FOLLOW_SERVICE_BASE_URL}/api/users/${userData.userId}/follow/${userIdToFollow}`);
       const updatedUserData = {
         ...userData,
         following: [...userData.following, userIdToFollow]
@@ -49,8 +50,8 @@ const SearchPage = () => {
     setIsLoading(true);
     setErrorMessage('');
     try {
-        const searchRequest = axios.get(`https://follow-service.default.svc.cluster.local:443/api/users/search?keyword=${searchQuery}`);
-        const userRequest = axios.get(`https://follow-service.default.svc.cluster.local:443/api/users/getUser/${userData.userId}`);
+        const searchRequest = axios.get(`${FOLLOW_SERVICE_BASE_URL}/api/users/search?keyword=${searchQuery}`);
+        const userRequest = axios.get(`${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userData.userId}`);
 
         const [userResponse, searchResponse] = await Promise.all([userRequest, searchRequest]);
 

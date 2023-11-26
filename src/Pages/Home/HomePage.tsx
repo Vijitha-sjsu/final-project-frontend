@@ -13,7 +13,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 const HomePage: React.FC = ()=> {
   const { userData, setUserData } = useUserData();
   const [tweets, setTweets] = useState([]);
-  const { isLoading, isAuthenticated, user } = useAuth0();
+  const { isLoading, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -28,6 +30,24 @@ const HomePage: React.FC = ()=> {
     });
     if (node) observer.current.observe(node);
   }, [loading, hasMore]);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        setAccessToken(token);
+        console.log(JSON.stringify(user))
+        const userRoles = user && user['https://claims.traveltales.com/roles']
+        setIsAdmin(userRoles.includes('Admin'))
+      } catch (error) {
+        console.error('Error getting access token', error);
+        setAccessToken(null);
+      }
+    };
+
+    fetchToken();
+    
+  }, [getAccessTokenSilently]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -77,7 +97,7 @@ const HomePage: React.FC = ()=> {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={3} sx={{ mt: 2, mr:2 }}> 
       <Grid xs={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
-          <SidebarComponent/>
+          <SidebarComponent isAdmin={isAdmin}/>
       </Grid>
       <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>

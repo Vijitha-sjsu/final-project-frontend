@@ -1,73 +1,54 @@
 import React from 'react';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { Tabs, Tab } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
-const StyledList = styled(List)(({ theme }) => ({
-  width: '80%',
-  backgroundColor: theme.palette.background.paper,
-  color: 'red',
-}));
-
-const StyledListItem = styled(ListItem)(({ theme }) => ({
-  paddingTop: theme.spacing(2),
-  paddingBottom: theme.spacing(2),
-  paddingLeft: theme.spacing(4),
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  '& .MuiListItemIcon-root': {
-    color: 'inherit',
-  },
-}));
-
-const SidebarComponent = () => {
+const SidebarComponent = ({ isAdmin }) => {
   const navigate = useNavigate();
   const { logout } = useAuth0();
+  const [value, setValue] = React.useState(0);
 
-    return (
-      <StyledList>
-        {/* Home */}
-        <StyledListItem onClick={()=> navigate('/home')}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </StyledListItem>
-  
-        {/* Profile */}
-        <StyledListItem onClick={()=> navigate('/profile')}>
-          <ListItemIcon>
-            <AccountBoxIcon />
-          </ListItemIcon>
-          <ListItemText primary="Profile" />
-        </StyledListItem>
-  
-        {/* Search */}
-        <StyledListItem onClick={()=> navigate('/search')}>
-          <ListItemIcon>
-            <SearchIcon />
-          </ListItemIcon>
-          <ListItemText primary="Search" />
-        </StyledListItem>
-
-          {/* Logout */}
-          <StyledListItem onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Logout" />
-          </StyledListItem>
-      </StyledList>
-    );
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+    switch (newValue) {
+      case 0:
+        navigate('/home');
+        break;
+      case 1:
+        navigate('/profile');
+        break;
+      case 2:
+        navigate('/search');
+        break;
+      case 3:
+        navigate('/admin');
+        break;
+      default:
+        break;
+    }
   };
-  
-  export default SidebarComponent;
+
+  return (
+    <Tabs
+      orientation="vertical"
+      value={value}
+      onChange={handleChange}
+      aria-label="Sidebar tabs"
+    >
+      <Tab icon={<HomeIcon />} label="Home" />
+      <Tab icon={<AccountBoxIcon />} label="Profile" />
+      <Tab icon={<SearchIcon />} label="Search" />
+      {isAdmin && (
+        <Tab icon={<AdminPanelSettingsIcon/>} label="Admin Dashboard" />
+      )}
+      <Tab icon={<LogoutIcon />} label="Logout" onClick={() => logout({ returnTo: window.location.origin })} />
+    </Tabs>
+  );
+};
+
+export default SidebarComponent;

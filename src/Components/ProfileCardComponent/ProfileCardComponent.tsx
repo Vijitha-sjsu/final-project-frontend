@@ -40,7 +40,10 @@ const ProfileCard: React.FC<any> = ({ profileData }) => {
         </Box>
       </Box>
       <CardContent sx={{ backgroundColor: theme.palette.background.paper }}> 
-        <Typography variant="body2" color={theme.palette.primary.main} textAlign="center">
+        <Typography variant="body2" color={theme.palette.primary.main} textAlign="center" sx={{
+          wordBreak: 'break-word', 
+          overflowWrap: 'break-word',
+        }}>
           {profileData.tagline}
         </Typography>
         <Grid container spacing={2} sx={{ marginTop: 2, justifyContent: 'center' }}>

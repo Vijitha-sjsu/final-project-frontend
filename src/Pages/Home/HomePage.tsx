@@ -4,16 +4,16 @@ import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
 import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent.tsx';
 import axios from 'axios';
-import { FEED_SERVICE_BASE_URL } from '../../constants.ts';
+import { FEED_SERVICE_BASE_URL, FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const HomePage: React.FC = ()=> {
-  const { logout } = useAuth0();
-  const { userData } = useUserData();
+  const { userData, setUserData } = useUserData();
   const [tweets, setTweets] = useState([]);
+  const { isLoading, isAuthenticated, user } = useAuth0();
 
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -30,8 +30,23 @@ const HomePage: React.FC = ()=> {
   }, [loading, hasMore]);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const userId = user?.sub;
+        const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userId}`;
+        const response = await axios.get(url);
+        setUserData(response.data); 
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
     loadMoreTweets();
-  }, []);
+  }, [isLoading, isAuthenticated, user]);
 
   const loadMoreTweets = async () => {
     setLoading(true);

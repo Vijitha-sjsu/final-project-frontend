@@ -37,6 +37,20 @@ function ProfileHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userData.userId}`;
+        const response = await axios.get(url);
+        setUserData(response.data); 
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } 
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleModalClose = () => {
     setErrorMessage('');
     setIsModalOpen(false);

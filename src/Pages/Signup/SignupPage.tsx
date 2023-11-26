@@ -6,10 +6,12 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useUserData } from '../../Contexts/UserDataContext.tsx';
 import { FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
+import { useAuthToken } from '../../Hooks/useAuthToken.tsx';
 
 const SignupPage = React.memo(() => {
 
     const { setUserData } = useUserData();
+    const accessToken = useAuthToken();
     const navigate = useNavigate();
     const { user } = useAuth0();
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,9 +22,18 @@ const SignupPage = React.memo(() => {
     };
   
     const handleSave = (formData) => {
+      if (!accessToken) {
+        console.error("Access token is not available");
+        return;
+      }
+    
       const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/create`;
       formData = {...formData, 'email': user?.email, 'userId': user?.sub}
-      axios.post(url, formData)
+      axios.post(url, formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      })
         .then(response => {
           setUserData(response.data);
           setIsModalOpen(false);
@@ -36,12 +47,15 @@ const SignupPage = React.memo(() => {
             console.error('Error saving user data:', error);
           }
         });
-    };
+    };    
 
     useEffect(() => {
+        if (!accessToken) return;
         const userId = user?.sub;
         const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userId}`;
-        axios.get(url)
+        axios.get(url, {headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },})
           .then(response => {
             setUserData(response.data);
             navigate('/home');
@@ -53,7 +67,7 @@ const SignupPage = React.memo(() => {
               console.error('Error fetching user data:', error);
             }
           });
-      }, []);
+      }, [accessToken]);
 
     return  <Box>
         <p>Loading...</p>

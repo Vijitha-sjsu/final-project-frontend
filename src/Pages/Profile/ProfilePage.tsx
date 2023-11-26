@@ -14,6 +14,7 @@ import Modal from '@mui/material/Modal';
 import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardComponent.tsx';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import { FOLLOW_SERVICE_BASE_URL, POST_SERVICE_BASE_URL } from '../../constants.ts';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -159,8 +160,27 @@ export default function ProfilePage({ profileData }) {
   const [editingPost, setEditingPost] = useState(null);
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
-
+  const { getAccessTokenSilently, user } = useAuth0();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { userData } = useUserData();
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        setAccessToken(token);
+        const userRoles = user && user['https://claims.traveltales.com/roles']
+        setIsAdmin(userRoles.includes('Admin'))
+      } catch (error) {
+        console.error('Error getting access token', error);
+        setAccessToken(null);
+      }
+    };
+
+    fetchToken();
+    
+  }, [getAccessTokenSilently]);
 
   // Fetch user's posts
   const fetchUserPosts = async () => {
@@ -260,7 +280,7 @@ export default function ProfilePage({ profileData }) {
       </Modal>
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          <SidebarComponent />
+          <SidebarComponent  isAdmin={isAdmin} initialTab={1}/>
         </Grid>
         <Grid item xs={9}>
           <ProfileHeader />

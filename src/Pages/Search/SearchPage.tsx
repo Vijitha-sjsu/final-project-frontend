@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextField, Box, Button, Grid, Typography } from '@mui/material';
 import axios from 'axios';
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent.tsx';
@@ -6,6 +6,7 @@ import ProfileCard from '../../Components/ProfileCardComponent/ProfileCardCompon
 import CheckIcon from '@mui/icons-material/Check';
 import { UserData, useUserData } from '../../Contexts/UserDataContext.tsx';
 import { FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const SearchPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -13,6 +14,26 @@ const SearchPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const { userData, setUserData } = useUserData();
+  const { getAccessTokenSilently, user } = useAuth0();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const token = await getAccessTokenSilently();
+        setAccessToken(token);
+        const userRoles = user && user['https://claims.traveltales.com/roles']
+        setIsAdmin(userRoles.includes('Admin'))
+      } catch (error) {
+        console.error('Error getting access token', error);
+        setAccessToken(null);
+      }
+    };
+
+    fetchToken();
+    
+  }, [getAccessTokenSilently]);
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
@@ -68,7 +89,7 @@ const SearchPage = () => {
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
-          <SidebarComponent />
+          <SidebarComponent isAdmin={isAdmin} initialTab={2}/>
         </Grid>
         <Grid item xs={9}>
             <Box sx={{ padding: 2 }}>

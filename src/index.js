@@ -3,28 +3,11 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { UserDataProvider } from './Contexts/UserDataContext.tsx';
-
-const theme = createTheme({
-  typography: {
-    fontFamily: 'Nunito, sans-serif',
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        '@global': {
-          '@font-face': {
-            fontFamily: 'Nunito',
-            src: `url(https://fonts.googleapis.com/css?family=Nunito:300,400,700&display=swap)`,
-          },
-        },
-      },
-    },
-  },
-});
+import  theme  from '../src/Utils/Theme.tsx'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

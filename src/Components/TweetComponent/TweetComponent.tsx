@@ -1,6 +1,6 @@
 import React, { memo, useState, useEffect } from "react";
 import format from "date-fns/format";
-import { Card, CardContent, CardHeader, Typography, IconButton, Menu, MenuItem } from "@mui/material";
+import { Card, CardContent, CardHeader, Typography, IconButton, Menu, MenuItem, useTheme } from "@mui/material";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CustomAvatar from "../AvatarComponent/AvatarComponent.tsx";
 import { UserData, useUserData } from "../../Contexts/UserDataContext.tsx";
@@ -24,6 +24,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { userData, setUserData } = useUserData();
+    const theme = useTheme();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -65,7 +66,15 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
     }
 
     return (
-        <Card sx={{ borderRadius: '16px' }}>
+        <Card sx={{ 
+            borderRadius: '16px', 
+            boxShadow: theme.shadows[2], 
+            border: `1px solid ${theme.palette.divider}`, 
+            '&:hover': {
+                boxShadow: `2px 2px 2px 2px ${theme.palette.primary.main}`, 
+            },
+            backgroundColor: theme.palette.background.paper 
+        }}>
             <CardHeader
                 avatar={ <CustomAvatar name={fullName} size={48}/>}
                 action={
@@ -84,11 +93,17 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
                         </Menu>
                     </>
                 }
-                title={user?.username}
+                title={<Typography variant="subtitle1">{user?.username}</Typography>}
                 subheader={format(new Date(lastModifiedDate), "MMM d, yyyy")}
+                titleTypographyProps={{ fontWeight: 'bold' }} 
+                subheaderTypographyProps={{ color: 'text.secondary' }}
+                sx={{ pb: 0 }} 
             />
-            <CardContent>
-                <Typography variant="body2" color="text.secondary">
+            <CardContent sx={{ pt: 1 }}> 
+                <Typography variant="body2" color="text.primary" sx={{ 
+                wordBreak: 'break-word', 
+                overflowWrap: 'break-word', 
+                }}>
                     {content}
                 </Typography>
             </CardContent>

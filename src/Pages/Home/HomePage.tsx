@@ -9,6 +9,7 @@ import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent
 import axios from 'axios';
 import { FEED_SERVICE_BASE_URL, FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Divider } from '@mui/material';
 
 const HomePage: React.FC = ()=> {
   const { userData, setUserData } = useUserData();
@@ -101,11 +102,17 @@ const HomePage: React.FC = ()=> {
       <Grid xs={6} >
           <Grid container direction={'column'} spacing={3}>
             <NewPostComponent />
-              {tweets.map((tweet, index) => (
+            <Divider sx={{ width: '60%', my: 2, mx: 'auto', borderColor: 'rgba(0, 0, 0, 0.12)' }} />
+              <Box sx={{
+                maxHeight: 'calc(100vh - 200px)', 
+                overflowY: 'auto'
+              }}>
+                  {tweets.map((tweet, index) => (
                 <Grid key={tweet.id} ref={index === tweets.length - 1 ? lastTweetElementRef : null}>
                   <TweetComponent userId={tweet.author_id} authorId={tweet.author_id} postId={tweet.tweetId} createdDate={tweet.tweetTimestamp} lastModifiedDate={tweet.tweetTimestamp} content={tweet.content} />
                 </Grid>
               ))}
+              </Box>
             </Grid>
             {loading && <p>Loading more tweets...</p>}
       </Grid>

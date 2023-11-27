@@ -91,7 +91,10 @@ const SearchPage = () => {
         <Grid item xs={3}>
           <SidebarComponent isAdmin={isAdmin} initialTab={2}/>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={9} sx={{
+            height: `calc(100vh)`, 
+            overflowY: 'auto',
+          }}>
             <Box sx={{ padding: 2 }}>
             <Box display="flex" gap={2} mb={2}>
                 <TextField

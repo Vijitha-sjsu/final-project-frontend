@@ -282,7 +282,10 @@ export default function ProfilePage({ profileData }) {
         <Grid item xs={3}>
           <SidebarComponent  isAdmin={isAdmin} initialTab={1}/>
         </Grid>
-        <Grid item xs={9}>
+        <Grid item xs={9} sx={{
+            height: `calc(100vh)`, 
+            overflowY: 'auto',
+          }}>
           <ProfileHeader />
           <Box sx={{ mt: 3 }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider', mt: 3 }}>

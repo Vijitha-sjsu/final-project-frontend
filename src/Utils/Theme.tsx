@@ -30,7 +30,7 @@ const theme = createTheme({
       contrastText: defaultColors.white,
     },
     secondary: {
-      main: defaultColors.marine,
+      main: defaultColors.feather,
       contrastText: defaultColors.white,
     },
   } 

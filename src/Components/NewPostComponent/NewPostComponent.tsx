@@ -11,7 +11,7 @@ interface NewPostComponentProps {
   postId?: string | null;
 }
 
-const NewPostComponent = ({ initialContent = '', onClose, postId = null }) => {
+const NewPostComponent = ({ initialContent = '', onClose = null, postId = null }) => {
   const [postContent, setPostContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'Success' | 'Error' | null>(null);
@@ -59,11 +59,11 @@ const NewPostComponent = ({ initialContent = '', onClose, postId = null }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, border: '1px solid #ccc', borderRadius: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, border: '1px solid #ccc', borderRadius: 2, margin: 2 }}>
       <TextareaAutosize
-        aria-label="What's happening?"
-        placeholder="What's happening?"
-        style={{ width: '100%', fontSize: '1rem', padding: '8px', marginBottom: '10px' }}
+        aria-label="Share your Travel Tales..."
+        placeholder="Share your Travel Tales..."
+        style={{ width: '100%', fontSize: '1rem', padding: '8px', marginBottom: '10px' , fontFamily: 'IBM Plex Sans, sans-serif'}}
         minRows={3}
         value={postContent}
         onChange={handlePostChange}

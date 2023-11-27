@@ -271,8 +271,8 @@ export default function ProfilePage({ profileData }) {
         <Box sx={{ 
           backgroundColor: 'background.paper',
           boxShadow: 24,
-          p: 4,
-          borderRadius: 2
+          borderRadius: 2,
+          width: 700
         }}>
           <NewPostComponent initialContent={editingPost?.content || ''} onClose={() => {setIsEditModalOpen(false); fetchUserPosts();}}
         postId={editingPost?.postId}/>

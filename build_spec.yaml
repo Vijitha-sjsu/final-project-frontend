@@ -11,6 +11,13 @@ env:
     - BUILDRUN_HASH
 steps:
   - type: Command
+    name: Define unique image tag
+    timeoutInseconds: 40
+    command: |
+      export BUILDRUN_HASH=$(echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7)
+      echo "BUILDRUN_HASH: $BUILDRUN_HASH"
+      
+  - type: Command
     name: Build and Push Docker Image for React App
     command: |
       echo "Building Docker image for React app..."

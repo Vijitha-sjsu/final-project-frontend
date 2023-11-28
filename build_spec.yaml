@@ -36,4 +36,4 @@ steps:
 outputArtifacts:
   - name: react-app-manifest
     type: BINARY
-    location: ${OCI_PRIMARY_SOURCE_DIR}/reat-app.yaml
+    location: ${OCI_PRIMARY_SOURCE_DIR}/react-app.yaml

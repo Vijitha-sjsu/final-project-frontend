@@ -29,7 +29,7 @@ steps:
   - type: Command
     name: Update Kubernetes Manifests
     command: |
-      find ${OCI_PRIMARY_SOURCE_DIR}/k8s -type f -name '*.yaml' -exec sed -i "s/\$BUILDRUN_HASH/$BUILDRUN_HASH/g" {} +
+      find ${OCI_PRIMARY_SOURCE_DIR} -type f -name '*.yaml' -exec sed -i "s/\$BUILDRUN_HASH/$BUILDRUN_HASH/g" {} +
 
 outputArtifacts:
   - name: react-app-manifest

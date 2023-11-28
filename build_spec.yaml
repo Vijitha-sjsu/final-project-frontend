@@ -1,0 +1,30 @@
+version: "0.1"
+component: build
+timeoutInSeconds: "1000"
+shell: bash
+env:
+  vaultVariables:
+    OCI_REGISTRY_TOKEN: ocid1.vaultsecret.oc1.us-sanjose-1.amaaaaaaeftofsqasqm2uu6dds4zl2aac6su7qr2kxuodtaklttidkzs4c7q
+    DOCKERHUB_USERNAME: ocid1.vaultsecret.oc1.us-sanjose-1.amaaaaaaeftofsqa2suhlrletprxa5ngp32eescov3uii452wb2hngsiogca
+    DOCKERHUB_TOKEN: ocid1.vaultsecret.oc1.us-sanjose-1.amaaaaaaeftofsqavhu4eqic4njf6ze6yqut5qqjvvjuad6wcwkwatuwbcyq
+  exportedVariables:
+    - BUILDRUN_HASH
+steps:
+  - type: Command
+    name: Build and Push Docker Image for React App
+    command: |
+      echo "Building Docker image for React app..."
+      cd ${OCI_PRIMARY_SOURCE_DIR}
+      docker build --pull --rm -t moukthikavuyyuru/react-app:$BUILDRUN_HASH .
+      echo "Pushing Docker image for React app to Docker Hub..."
+      docker push moukthikavuyyuru/react-app:$BUILDRUN_HASH || exit 1
+
+  - type: Command
+    name: Update Kubernetes Manifests
+    command: |
+      find ${OCI_PRIMARY_SOURCE_DIR} -type f -name '*.yaml' -exec sed -i "s/\$BUILDRUN_HASH/$BUILDRUN_HASH/g" {} +
+
+outputArtifacts:
+  - name: react-app-manifest
+    type: BINARY
+    location: ${OCI_PRIMARY_SOURCE_DIR}/reat-app.yaml

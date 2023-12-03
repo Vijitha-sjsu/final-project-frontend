@@ -16,9 +16,10 @@ export interface TweetComponentProps {
     content: string;
     onEditPost?: any;
     onDeletePost?: any;
+    unfollow?: boolean;
 }
 
-const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost }) => {
+const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost, unfollow }) => {
     const [user, setUser] = useState<UserData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -59,6 +60,21 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
         handleMenuClose();
     };
 
+    const handleUnfollowUser = async () => {
+        try {
+        await axios.post(`${FOLLOW_SERVICE_BASE_URL}/api/users/${userData.userId}/unfollow/${authorId}`);
+        const updatedUserData = {
+            ...userData,
+            following: userData.following.filter(userId => userId !== authorId)
+        };
+        setUserData(updatedUserData);
+        } catch (error) {
+        const message = error.response && error.response.data ? error.response.data.message : error.message;
+        console.error(message)
+        }
+        handleMenuClose();
+    };
+
     const fullName = `${user?.firstName} ${user?.lastName}`.trim();
 
     if (isLoading) {
@@ -89,6 +105,10 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
                         >
                             {onEditPost && (
                                 <><MenuItem onClick={handleEditPost}>Edit Post</MenuItem><MenuItem onClick={handleDeletePost}>Delete Post</MenuItem></>
+                            )}
+
+                            {unfollow && (
+                                <><MenuItem onClick={handleUnfollowUser}>Unfollow User</MenuItem></>
                             )}
                         </Menu>
                     </>

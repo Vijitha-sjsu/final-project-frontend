@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Box, Button, Grid, Stack, Divider } from '@mui/material';
+import { TextField, Box, Button, Grid, Divider, Modal } from '@mui/material';
 import axios from 'axios';
 import SidebarComponent from '../../Components/SidebarComponent/SidebarComponent.tsx';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -8,6 +8,8 @@ import { LocalizationProvider, DesktopDatePicker } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { POST_SERVICE_BASE_URL } from '../../constants.ts';
 import TweetComponent from '../../Components/TweetComponent/TweetComponent.tsx';
+import NewPostComponent from '../../Components/NewPostComponent/NewPostComponent.tsx';
+import { useUserData } from '../../Contexts/UserDataContext.tsx';
 
 const AdminDashboard = () => {
   const [fromDate, setFromDate] = useState<Dayjs | null>(null);
@@ -17,7 +19,10 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingPost, setEditingPost] = useState(null);
   const { getAccessTokenSilently } = useAuth0();
+  const { userData } = useUserData();
 
   const handleSearchSubmit = async () => {
     setIsLoading(true);
@@ -34,7 +39,9 @@ const AdminDashboard = () => {
         params
       });
 
-      setSearchResults(response.data);
+    // Sort the search results in descending order by lastModifiedDate
+    const sortedResults = response.data.sort((a, b) => dayjs(b.lastModifiedDate).diff(dayjs(a.lastModifiedDate)));
+    setSearchResults(sortedResults);
     } catch (error) {
       const message = error.response && error.response.data ? error.response.data.message : error.message;
       setErrorMessage(`Error fetching posts: ${message}`);
@@ -43,9 +50,44 @@ const AdminDashboard = () => {
     setIsLoading(false);
   };
 
+  const handleEditPostClick = (post) => {
+    setEditingPost(post); 
+    setIsEditModalOpen(true); 
+  };
+
+  const handleDeletePostClick = async (postId) => {
+    try {
+        await axios.delete(`${POST_SERVICE_BASE_URL}/api/post/deletePost/${userData.userId}/${postId}`);
+        handleSearchSubmit();
+    } catch (error) {
+        console.error("Failed to delete the post:", error);
+    }
+};
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box sx={{ flexGrow: 1 }}>
+      <Modal
+        open={isEditModalOpen}
+        onClose={() => {setIsEditModalOpen(false);}}
+        aria-labelledby="edit-post-modal"
+        aria-describedby="modal-modal-description"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <Box sx={{ 
+          backgroundColor: 'background.paper',
+          boxShadow: 24,
+          borderRadius: 2,
+          width: 700
+        }}>
+          <NewPostComponent initialContent={editingPost?.content || ''} onClose={() => {setIsEditModalOpen(false); handleSearchSubmit();}}
+        postId={editingPost?.postId}/>
+        </Box>
+      </Modal>
         <Grid container spacing={2}>
           <Grid item xs={3}>
             <SidebarComponent initialTab={3} isAdmin={true} />
@@ -95,8 +137,8 @@ const AdminDashboard = () => {
                 <Divider sx={{ width: '60%', my: 5, mx: 'auto', borderColor: 'rgba(0, 0, 0, 0.12)' }} />
                 <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
                   {searchResults.map((tweet, index) => (
-                    <Grid key={tweet.postId} item sx={{mb: 2}}>
-                      <TweetComponent userId={tweet.authorId} authorId={tweet.authorId} postId={tweet.postId} createdDate={tweet.createdDate} lastModifiedDate={tweet.lastModifiedDate} content={tweet.content} />
+                    <Grid key={tweet.postId} item sx={{m: 2}}>
+                      <TweetComponent userId={tweet.authorId} authorId={tweet.authorId} postId={tweet.postId} createdDate={tweet.createdDate} lastModifiedDate={tweet.lastModifiedDate} content={tweet.content} onEditPost={() => handleEditPostClick(tweet)} onDeletePost={handleDeletePostClick}/>
                     </Grid>
                   ))}
                 </Box>

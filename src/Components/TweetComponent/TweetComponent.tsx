@@ -87,7 +87,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
                             open={open}
                             onClose={handleMenuClose}
                         >
-                            {userId === userData.userId && (
+                            {onEditPost && (
                                 <><MenuItem onClick={handleEditPost}>Edit Post</MenuItem><MenuItem onClick={handleDeletePost}>Delete Post</MenuItem></>
                             )}
                         </Menu>

@@ -5,7 +5,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CustomAvatar from "../AvatarComponent/AvatarComponent.tsx";
 import { UserData, useUserData } from "../../Contexts/UserDataContext.tsx";
 import axios from "axios";
-import { FOLLOW_SERVICE_BASE_URL } from "../../constants.ts";
+import { FOLLOW_SERVICE_BASE_URL, POST_SERVICE_BASE_URL } from "../../constants.ts";
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 export interface TweetComponentProps {
     userId: string;
@@ -17,16 +19,40 @@ export interface TweetComponentProps {
     onEditPost?: any;
     onDeletePost?: any;
     unfollow?: boolean;
+    isLiked: boolean;
 }
 
-const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost, unfollow }) => {
+const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost, unfollow, isLiked}) => {
     const [user, setUser] = useState<UserData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { userData, setUserData } = useUserData();
     const theme = useTheme();
+    const [liked, setLiked] = useState(isLiked);
 
+    const handleLikeClick = async () => {
+        const endpoint = `${POST_SERVICE_BASE_URL}/api/post/posts/${postId}/${liked ? 'unlike' : 'like'}`;
+    
+        try {
+            await axios.post(endpoint, {}, {
+                params: {
+                    userId: userData.userId
+                }
+            });
+            setLiked(!liked);
+        } catch (error) {
+            console.error("Failed to update like status:", error);
+        }
+    };
+
+    const likeIconStyles = {
+        color: liked ? theme.palette.warning.main : 'inherit',
+        '&:hover': {
+            color: theme.palette.warning.main,
+        },
+    };
+    
     useEffect(() => {
         const fetchUser = async () => {
             setIsLoading(true);
@@ -95,6 +121,9 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
                 avatar={ <CustomAvatar name={fullName} size={48}/>}
                 action={
                     <>
+                        <IconButton aria-label="like" onClick={handleLikeClick} sx={likeIconStyles}>
+                        {liked ? <FavoriteIcon color="warning" /> : <FavoriteBorderIcon />}
+                        </IconButton>
                         <IconButton aria-label="settings" onClick={handleMenuClick}>
                             <MoreVertIcon />
                         </IconButton>

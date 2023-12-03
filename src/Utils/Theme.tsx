@@ -5,7 +5,8 @@ const defaultColors = {
   marine: '#57BC90',
   forest: '#015249',
   sleekGrey: '#A5A5AF',
-  white: '#FFFFFF'
+  white: '#FFFFFF', 
+  pink: '#f73378', 
 };
 
 const theme = createTheme({
@@ -33,6 +34,9 @@ const theme = createTheme({
       main: defaultColors.feather,
       contrastText: defaultColors.white,
     },
+    warning:{
+      main: defaultColors.pink
+    }
   } 
 });
 

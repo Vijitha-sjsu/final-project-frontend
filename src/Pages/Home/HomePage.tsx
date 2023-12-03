@@ -87,7 +87,7 @@ const HomePage: React.FC = ()=> {
       });
       setHasMore(response.data.length > 0);
     } catch (error) {
-      console.error("Error fetching tweets:", error);
+            console.error("Error fetching tweets:", error);
     }
     setLoading(false);
   };
@@ -107,11 +107,16 @@ const HomePage: React.FC = ()=> {
                 maxHeight: 'calc(100vh - 200px)', 
                 overflowY: 'auto'
               }}>
-                  {tweets.map((tweet, index) => (
+                  {tweets.map((tweet, index) => { 
+                    
+                    // Determine if the current user has liked the tweet
+                  const isLiked = tweet.likes?.includes(userData.userId);
+
+                  return(
                 <Grid key={tweet.id} ref={index === tweets.length - 1 ? lastTweetElementRef : null}>
-                  <TweetComponent userId={tweet.author_id} authorId={tweet.author_id} postId={tweet.tweetId} createdDate={tweet.tweetTimestamp} lastModifiedDate={tweet.tweetTimestamp} content={tweet.content} unfollow={true} />
+                  <TweetComponent userId={tweet.author_id} authorId={tweet.author_id} postId={tweet.tweetId} createdDate={tweet.tweetTimestamp} lastModifiedDate={tweet.tweetTimestamp} content={tweet.content} unfollow={true} isLiked={isLiked}/>
                 </Grid>
-              ))}
+              )})}
               </Box>
             </Grid>
             {loading && <p>Loading more tweets...</p>}

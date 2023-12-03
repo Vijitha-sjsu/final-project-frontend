@@ -13,10 +13,24 @@ const SearchPage = () => {
   const [searchResults, setSearchResults] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const { userData, setUserData } = useUserData();
   const { getAccessTokenSilently, user } = useAuth0();
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const { userData, setUserData } = useUserData();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const url = `${FOLLOW_SERVICE_BASE_URL}/api/users/getUser/${userData.userId}`;
+        const response = await axios.get(url);
+        setUserData(response.data); 
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      } 
+    };
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -60,6 +74,31 @@ const SearchPage = () => {
     } catch (error) {
       const message = error.response && error.response.data ? error.response.data.message : error.message;
       setErrorMessage(`Error following user: ${message}`);
+    }
+    setIsLoading(false);
+  };
+
+  const handleUnfollowUser = async (userIdToUnfollow) => {
+    setIsLoading(true);
+    try {
+      await axios.post(`${FOLLOW_SERVICE_BASE_URL}/api/users/${userData.userId}/unfollow/${userIdToUnfollow}`);
+      const updatedUserData = {
+        ...userData,
+        following: userData.following.filter(userId => userId !== userIdToUnfollow)
+      };
+      setUserData(updatedUserData);
+
+      const updatedSearchResults = searchResults.map(profile => {
+        if (profile.userId === userIdToUnfollow) {
+          return { ...profile, followers: profile.followers.filter(userId => userId !== userData.userId) };
+        }
+        return profile;
+      });
+      setSearchResults(updatedSearchResults);
+
+    } catch (error) {
+      const message = error.response && error.response.data ? error.response.data.message : error.message;
+      setErrorMessage(`Error unfollowing user: ${message}`);
     }
     setIsLoading(false);
   };
@@ -113,15 +152,25 @@ const SearchPage = () => {
                 {searchResults.length > 0 && searchResults.map( profile => {
                     return (<Box sx={{width: '75%', marginBottom: 2}}>
                         <ProfileCard profileData={profile} />
-                        {!userData?.following.includes(profile?.userId) && 
+                        {userData?.following.includes(profile?.userId) ? (
+                          <Button 
+                            variant="contained" 
+                            color="secondary" 
+                            onClick={() => handleUnfollowUser(profile?.userId)}
+                            sx={{ marginTop: 1 }}
+                          >
+                            Unfollow
+                          </Button>
+                        ) : (
                           <Button 
                             variant="contained" 
                             color="primary" 
                             onClick={() => handleFollowUser(profile?.userId)}
                             sx={{ marginTop: 1 }}
                           >
-                            Follow User
-                          </Button>}
+                            Follow
+                          </Button>
+                        )}
                     </Box>)
                   })}
             </Box>

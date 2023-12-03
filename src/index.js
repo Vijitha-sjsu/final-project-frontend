@@ -8,6 +8,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { UserDataProvider } from './Contexts/UserDataContext.tsx';
 import  theme  from '../src/Utils/Theme.tsx'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider, DesktopDatePicker, MobileDatePicker } from '@mui/x-date-pickers';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,7 +18,9 @@ root.render(
       <BrowserRouter>
         <UserDataProvider>
           <Auth0Provider domain="dev-75uroj1rczuev8rq.us.auth0.com" clientId="gghNQgPc8qmARgHvkrvoDKsWv1PqFwaK" authorizationParams={{redirect_uri: window.location.origin}}>
-            <App />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <App />
+            </LocalizationProvider>
           </Auth0Provider>
         </UserDataProvider>
       </BrowserRouter>

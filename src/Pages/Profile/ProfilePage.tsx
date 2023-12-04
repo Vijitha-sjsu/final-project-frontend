@@ -309,11 +309,16 @@ export default function ProfilePage({ profileData }) {
                 ) : error ? (
                   <Typography color="error">{error}</Typography>
                 ) : (
-                  userPosts.map((post) => (
+                  userPosts.map((post) => { 
+
+                    // Determine if the current user has liked the tweet
+                  const isLiked = post.likes?.includes(userData.userId);
+                    
+                    return(
                     <Grid item key={post.id}>
-                       <TweetComponent {...post} onEditPost={() => handleEditPostClick(post)} onDeletePost={handleDeletePostClick}/>
+                       <TweetComponent {...post} isLiked={isLiked} onEditPost={() => handleEditPostClick(post)} onDeletePost={handleDeletePostClick}/>
                     </Grid>
-                  ))
+                  )})
                 )}
             </Grid>
             </TabPanel>

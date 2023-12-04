@@ -138,7 +138,7 @@ const AdminDashboard = () => {
                 <Box sx={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }}>
                   {searchResults.map((tweet, index) => (
                     <Grid key={tweet.postId} item sx={{m: 2}}>
-                      <TweetComponent userId={tweet.authorId} authorId={tweet.authorId} postId={tweet.postId} createdDate={tweet.createdDate} lastModifiedDate={tweet.lastModifiedDate} content={tweet.content} onEditPost={() => handleEditPostClick(tweet)} onDeletePost={handleDeletePostClick}/>
+                      <TweetComponent userId={tweet.authorId} authorId={tweet.authorId} postId={tweet.postId} createdDate={tweet.createdDate} lastModifiedDate={tweet.lastModifiedDate} content={tweet.content} onEditPost={() => handleEditPostClick(tweet)} onDeletePost={handleDeletePostClick} showLike={false}/>
                     </Grid>
                   ))}
                 </Box>

@@ -19,10 +19,12 @@ export interface TweetComponentProps {
     onEditPost?: any;
     onDeletePost?: any;
     unfollow?: boolean;
-    isLiked: boolean;
+    isLiked?: boolean;
+    showLike?: boolean;
+    likes?:any;
 }
 
-const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost, unfollow, isLiked}) => {
+const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, postId, createdDate, lastModifiedDate, content, onEditPost, onDeletePost, unfollow, isLiked, showLike=true, likes}) => {
     const [user, setUser] = useState<UserData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -30,6 +32,7 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
     const { userData, setUserData } = useUserData();
     const theme = useTheme();
     const [liked, setLiked] = useState(isLiked);
+    const [currentLikeCount, setCurrentLikeCount] = useState(likes ? likes.length : 0);
 
     const handleLikeClick = async () => {
         const endpoint = `${POST_SERVICE_BASE_URL}/api/post/posts/${postId}/${liked ? 'unlike' : 'like'}`;
@@ -40,6 +43,11 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
                     userId: userData.userId
                 }
             });
+            if (liked) {
+                setCurrentLikeCount(currentLikeCount - 1);
+            } else {
+                setCurrentLikeCount(currentLikeCount + 1);
+            }
             setLiked(!liked);
         } catch (error) {
             console.error("Failed to update like status:", error);
@@ -121,9 +129,19 @@ const TweetComponent: React.FC<TweetComponentProps> = memo(({ userId, authorId, 
                 avatar={ <CustomAvatar name={fullName} size={48}/>}
                 action={
                     <>
-                        <IconButton aria-label="like" onClick={handleLikeClick} sx={likeIconStyles}>
-                        {liked ? <FavoriteIcon color="warning" /> : <FavoriteBorderIcon />}
-                        </IconButton>
+                        {showLike && (
+                            <IconButton aria-label="like" onClick={handleLikeClick} sx={likeIconStyles}>
+                                {liked ? <FavoriteIcon color="warning" /> : <FavoriteBorderIcon />}
+                                <Typography variant="body2" sx={{ 
+                                        position: 'relative', 
+                                        bottom: '-22px',
+                                        left: '-15px',  
+                                        lineHeight: '1'
+                                    }}>
+                                    {currentLikeCount}
+                                </Typography>
+                            </IconButton>
+                        )}
                         <IconButton aria-label="settings" onClick={handleMenuClick}>
                             <MoreVertIcon />
                         </IconButton>

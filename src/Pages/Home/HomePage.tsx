@@ -114,7 +114,7 @@ const HomePage: React.FC = ()=> {
 
                   return(
                 <Grid key={tweet.id} ref={index === tweets.length - 1 ? lastTweetElementRef : null}>
-                  <TweetComponent userId={tweet.author_id} authorId={tweet.author_id} postId={tweet.tweetId} createdDate={tweet.tweetTimestamp} lastModifiedDate={tweet.tweetTimestamp} content={tweet.content} unfollow={true} isLiked={isLiked}/>
+                  <TweetComponent userId={tweet.author_id} authorId={tweet.author_id} postId={tweet.tweetId} createdDate={tweet.tweetTimestamp} lastModifiedDate={tweet.tweetTimestamp} content={tweet.content} unfollow={true} isLiked={isLiked} likes = {tweet.likes}/>
                 </Grid>
               )})}
               </Box>

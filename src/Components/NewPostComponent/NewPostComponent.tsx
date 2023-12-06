@@ -38,17 +38,19 @@ const NewPostComponent = ({ initialContent = '', onClose = null, postId = null, 
     setErrorMessage('');
 
     const updatePostData = {
-      userId: userData.userId,
-      authorId: userData.userId,
       content: postContent,
     };
 
-    if (isAdmin) {
-      updatePostData.isAdmin = true;
+    let url =  `${POST_SERVICE_BASE_URL}/api/post/${postId ? `updatePost/${userData.userId}/${postId}` : `createPost`}`;
+
+    if (postId && isAdmin) {
+      url += `?isAdmin=true`;
     }
     
     try {
-      const response = postId? await axios.put(`${POST_SERVICE_BASE_URL}/api/post/updatePost/${userData.userId}/${postId}`, updatePostData) : await axios.post(`${POST_SERVICE_BASE_URL}/api/post/createPost`, {
+      const response = postId
+    ? await axios.put(url, updatePostData)
+    : await axios.post(url, {
         userId: userData.userId,
         authorId: userData.userId,
         content: postContent

@@ -9,9 +9,10 @@ interface NewPostComponentProps {
   initialContent?: string;
   onClose?: () => void; 
   postId?: string | null;
+  isAdmin?: boolean;
 }
 
-const NewPostComponent = ({ initialContent = '', onClose = null, postId = null }) => {
+const NewPostComponent = ({ initialContent = '', onClose = null, postId = null, isAdmin }) => {
   const [postContent, setPostContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionStatus, setSubmissionStatus] = useState<'Success' | 'Error' | null>(null);
@@ -35,13 +36,19 @@ const NewPostComponent = ({ initialContent = '', onClose = null, postId = null }
     setIsSubmitting(true);
     setSubmissionStatus(null);
     setErrorMessage('');
+
+    const updatePostData = {
+      userId: userData.userId,
+      authorId: userData.userId,
+      content: postContent,
+    };
+
+    if (isAdmin) {
+      updatePostData.isAdmin = true;
+    }
     
     try {
-      const response = postId? await axios.put(`${POST_SERVICE_BASE_URL}/api/post/updatePost/${userData.userId}/${postId}`, {
-        userId: userData.userId,
-        authorId: userData.userId,
-        content: postContent
-      }) : await axios.post(`${POST_SERVICE_BASE_URL}/api/post/createPost`, {
+      const response = postId? await axios.put(`${POST_SERVICE_BASE_URL}/api/post/updatePost/${userData.userId}/${postId}`, updatePostData) : await axios.post(`${POST_SERVICE_BASE_URL}/api/post/createPost`, {
         userId: userData.userId,
         authorId: userData.userId,
         content: postContent

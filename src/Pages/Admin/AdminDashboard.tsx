@@ -57,7 +57,11 @@ const AdminDashboard = () => {
 
   const handleDeletePostClick = async (postId) => {
     try {
-        await axios.delete(`${POST_SERVICE_BASE_URL}/api/post/deletePost/${userData.userId}/${postId}`);
+        await axios.delete(`${POST_SERVICE_BASE_URL}/api/post/deletePost/${userData.userId}/${postId}`, {
+            params: {
+                isAdmin: true
+            }
+        });
         handleSearchSubmit();
     } catch (error) {
         console.error("Failed to delete the post:", error);
@@ -85,7 +89,7 @@ const AdminDashboard = () => {
           width: 700
         }}>
           <NewPostComponent initialContent={editingPost?.content || ''} onClose={() => {setIsEditModalOpen(false); handleSearchSubmit();}}
-        postId={editingPost?.postId}/>
+        postId={editingPost?.postId} isAdmin={true}/>
         </Box>
       </Modal>
         <Grid container spacing={2}>

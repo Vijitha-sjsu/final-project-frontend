@@ -104,9 +104,9 @@ const SearchPage = () => {
   };
 
   const handleSearchSubmit = async () => {
-    if (!searchQuery.trim()) {
-        return;
-      }
+    // if (!searchQuery.trim()) {
+    //     return;
+    //   }
     setIsLoading(true);
     setErrorMessage('');
     try {

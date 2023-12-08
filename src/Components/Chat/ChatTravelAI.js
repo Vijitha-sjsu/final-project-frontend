@@ -12,7 +12,7 @@ function ChatTravelAI() {
 
         console.log("Sending question:", question); 
 
-        const apiUrl = 'http://my-flask-app-service/ask';
+        const apiUrl = 'https://146.235.233.3/ask';
         try {
             const response = await axios.post(apiUrl, { question });
             console.log("Received response:", response.data); 

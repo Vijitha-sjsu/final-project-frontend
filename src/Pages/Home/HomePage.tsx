@@ -10,6 +10,8 @@ import axios from 'axios';
 import { FEED_SERVICE_BASE_URL, FOLLOW_SERVICE_BASE_URL } from '../../constants.ts';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Divider } from '@mui/material';
+import ChatTravelAI from '../../Components/Chat/ChatTravelAI.js';
+import './HomePage.css'; 
 
 const HomePage: React.FC = ()=> {
   const { userData, setUserData } = useUserData();
@@ -123,6 +125,9 @@ const HomePage: React.FC = ()=> {
       </Grid>
       <Grid xs={3} > 
           <ProfileCard profileData={userData} />
+          <Box className="chat-travel-ai">
+            <ChatTravelAI />
+          </Box>
       </Grid>
       </Grid>
     </Box>

@@ -27,7 +27,7 @@ function ChatTravelAI() {
     return (
         <div className="chat-widget">
             <button onClick={() => setIsOpen(!isOpen)} className="chat-button">
-                {isOpen ? 'Close Chat' : 'Chat with Us'}
+                {isOpen ? 'Close Chat' : 'Chat With Your AI Travel Agent'}
             </button>
 
             {isOpen && (
